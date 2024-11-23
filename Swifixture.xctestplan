@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "ED582459-078A-497B-BDAC-415C1DC34793",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:",
+      "identifier" : "Sample",
+      "name" : "Sample"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwifixtureTests",
+        "name" : "SwifixtureTests"
+      }
+    }
+  ],
+  "version" : 1
+}
