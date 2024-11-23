@@ -4,20 +4,106 @@
 
 Swifixture is a Swift Package that automatically generates fixture methods for Swift.
 
+## 📚 Table of Contents
+
+- [📦 Installation](#-installation)
+  - [💡 Basic](#basic)
+  - [🔧 Xcode build phase](#xcode-build-phase)
+- [🚀 Usage](#-usage)
+  - [🔧 Options](#options)
+  - [💡 Example](#example)
+    - [Using `/// @fixturable`](#using-fixturable)
+    - [Override Settings for Custom Initial Values](#override-settings-for-custom-initial-values)
+    - [Example of Generated Output](#example-of-generated-output)
+    - [Additional Imports and Testable Import](#additional-imports-and-testable-import)
+- [🚧 Work In Progress](#-work-in-progress)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+
 ## 📦 Installation
 
-To use Swifixture, you need to have Swift installed on your machine. You can clone the repository and build the package using the following commands:
+### 💡 Basic
 
 ```bash
-bash
 git clone https://github.com/ruwatana/swifixture.git
 cd swifixture
 swift build
 ```
 
+### 🔧 Install on your Xcode Project (Build Phase)
+
+We also recommend to run Swifixture on your build phases by `BuildTools` package.
+(This approach is inspired by [nicklockwood/SwiftFormat](https://github.com/nicklockwood/SwiftFormat/blob/0.55.1/README.md#xcode-build-phase))
+
+To set up Swifixture as an Xcode build phase, do the following:
+
+1. Create a `BuildTools` folder (if not already exists)
+
+`BuildTools` folder is a folder that contains the Swifixture executable.
+
+Because it is a build tool, it is not included in the main package.
+
+```bash
+mkdir -p BuildTools
+```
+
+2. Create a Swift Package
+
+```bash
+cd BuildTools
+swift package init
+```
+
+3. Add Swifixture as a dependency to the `Package.swift`
+
+```swift
+// Package.swift
+import PackageDescription
+
+let package = Package(
+    name: "BuildTools",
+    platforms: [
+        .macOS(.v13)
+    ],
+    products: [
+        .library(name: "BuildTools", targets: ["BuildTools"])
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/ruwatana/swifixture.git",
+            branch: "main"  // NOTE: This package is working in progress
+        )
+    ],
+    targets: [
+        .target(
+            name: "BuildTools",
+            dependencies: [
+                .product(name: "Swifixture", package: "Swifixture")
+            ]
+        )
+    ]
+)
+```
+
+4. Add a build phase to your target
+
+Open your project in Xcode, select your target, and go to the "Build Phases" tab. Click the "+" button and add a "Run Script" phase. In the script field, add the following command:
+
+```bash
+# If the BuildTools is not built, build it.
+if [ ! -d "${SRCROOT}/BuildTools/.build/release" ]; then
+    xcrun --sdk macosx swift build -c release --package-path "${SRCROOT}/BuildTools"
+fi
+
+# Run Swifixture
+"${SRCROOT}/BuildTools/.build/release/Swifixture" \
+    --source "${SRCROOT}/Sources" \
+    --output "${SRCROOT}/Generated/Fixtures.swift"
+```
+
 ## 🚀 Usage
 
-Swifixture can be executed from the command line. The basic syntax is as follows:
+Swifixture can be executed from the command line as an executable target. The basic syntax is as follows:
 
 ```bash
 swift run Swifixture [options]
@@ -25,12 +111,13 @@ swift run Swifixture [options]
 
 ### 🔧 Options
 
-| Option                                         | Description                                                                                         |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `--source <path>`                              | Specify the source file or directory path to search recursively for Swift files. Default is `./`.   |
-| `--output <path>`                              | Specify the output file for the generated fixture methods. Default is `./Generated/Fixtures.swift`. |
-| `--additional-imports <module1> <module2> ...` | Specify additional module names to import. By default, Foundation is imported.                      |
-| `--testable-import <module>`                   | Specify a module name to testable import. By default, it is not imported.                           |
+| Option                                         | Shorthand | Description                                                                                         |
+| ---------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |
+| `--help`                                       | `-h`      | Show help information.                                                                              |
+| `--source <path>`                              | `-s`      | Specify the source file or directory path to search recursively for Swift files. Default is `./`.   |
+| `--output <path>`                              | `-o`      | Specify the output file for the generated fixture methods. Default is `./Generated/Fixtures.swift`. |
+| `--additional-imports <module1> <module2> ...` |           | Specify additional module names to import. By default, Foundation is imported.                      |
+| `--testable-import <module>`                   |           | Specify a module name to testable import. By default, it is not imported.                           |
 
 ### 💡 Example
 
@@ -47,16 +134,20 @@ You can annotate your `struct` with `/// @fixturable` to enable automatic genera
 For example:
 
 ```swift
+// MyStruct.swift
+
 /// @fixturable
 struct User {
-    var name: String
-    var age: Int
+    let name: String
+    let age: Int
 }
 ```
 
 This will generate fixture methods for the `User` struct on `./Generated/Fixtures.swift`, allowing you to easily create test instances.
 
 ```swift
+// Generated/Fixtures.swift
+
 ///
 ///  @Generated by Swifixture
 ///
@@ -81,6 +172,8 @@ extension User {
 You can also specify custom initial values for properties using the `/// @fixturable(override: key = value)` annotation. For instance, if you have a custom `enum` and want to set a specific value, you can do it like this:
 
 ```swift
+// MyStruct.swift
+
 enum UserRole {
     case admin
     case user
@@ -88,9 +181,9 @@ enum UserRole {
 
 /// @fixturable(override: role = .admin)
 struct User {
-    var name: String
-    var age: Int
-    var role: UserRole
+    let name: String
+    let age: Int
+    let role: UserRole
 }
 ```
 
@@ -101,7 +194,7 @@ In this example, the `role` property will default to `.admin` when generating fi
 When you run the Swifixture tool with the above `User` struct, it will generate a file similar to the following:
 
 ```swift
-///
+// Generated/Fixtures.swift
 ///  @Generated by Swifixture
 ///
 
@@ -137,6 +230,8 @@ swift run Swifixture \
 then:
 
 ```swift
+// Generated/Fixtures.swift
+
 ///
 ///  @Generated by Swifixture
 ///
@@ -154,13 +249,32 @@ import SwiftUI
 
 Currently, Swifixture only supports auto-generating fixture methods for `struct`.
 
-Additionally, it is limited to Swift's standard primitive types such as `String`, `Int`, `Double`, etc.
+Additionally, it is limited to our defined primitive types such as `String`, `Int`, `Double`, etc.
 
 If you want to use custom types, you consider to use override settings or contribute to Swifixture!
 
 ## 🤝 Contributing
 
 We welcome contributions to improve Swifixture! Please feel free to submit a pull request or open an issue for any bugs or feature requests.
+
+### Development
+
+Open this project in Xcode and edit the code.
+
+#### Test
+
+We have prepared a xctestplan, so you can run the test in Xcode.
+
+#### Build and Run
+
+You can build and run Swifixture with `swift` command.
+
+We have prepared a test source file in `./Tests/SwifixtureTests/Resources/Source.swift`.
+
+```bash
+swift build
+swift run Swifixture --source ./Tests/SwifixtureTests/Resources/Source.swift
+```
 
 ## 📄 License
 
