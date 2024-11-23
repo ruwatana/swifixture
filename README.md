@@ -7,15 +7,15 @@ Swifixture is a Swift Package that automatically generates fixture methods for S
 ## 📚 Table of Contents
 
 - [📦 Installation](#-installation)
-  - [💡 Basic](#basic)
-  - [🔧 Xcode build phase](#xcode-build-phase)
+  - [💡 Basic](#-basic)
+  - [🔧 Install on your Xcode Project](#-install-on-your-xcode-project)
 - [🚀 Usage](#-usage)
-  - [🔧 Options](#options)
-  - [💡 Example](#example)
-    - [Using `/// @fixturable`](#using-fixturable)
+  - [🔧 Options](#-options)
+  - [💡 Example](#-example)
+    - [Using fixturable](#-using-fixturable)
     - [Override Settings for Custom Initial Values](#override-settings-for-custom-initial-values)
-    - [Example of Generated Output](#example-of-generated-output)
-    - [Additional Imports and Testable Import](#additional-imports-and-testable-import)
+    - [Example of Generated Output](#-example-of-generated-output)
+    - [Additional Imports and Testable Import](#-additional-imports-and-testable-import)
 - [🚧 Work In Progress](#-work-in-progress)
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
@@ -30,7 +30,7 @@ cd swifixture
 swift build
 ```
 
-### 🔧 Install on your Xcode Project (Build Phase)
+### 🔧 Install on your Xcode Project
 
 We also recommend to run Swifixture on your build phases by `BuildTools` package.
 (This approach is inspired by [nicklockwood/SwiftFormat](https://github.com/nicklockwood/SwiftFormat/blob/0.55.1/README.md#xcode-build-phase))
@@ -127,7 +127,7 @@ To generate fixture methods for a Swift file located at `./MyStruct.swift` and o
 swift run Swifixture --source ./MyStruct.swift
 ```
 
-#### Using `/// @fixturable`
+#### Using fixturable
 
 You can annotate your `struct` with `/// @fixturable` to enable automatic generation of fixture methods.
 
