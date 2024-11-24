@@ -79,7 +79,7 @@ let package = Package(
         .target(
             name: "BuildTools",
             dependencies: [
-                .product(name: "Swifixture", package: "Swifixture")
+                .product(name: "swifixture", package: "Swifixture")
             ]
         )
     ]
@@ -91,23 +91,23 @@ let package = Package(
 Open your project in Xcode, select your target, and go to the "Build Phases" tab. Click the "+" button and add a "Run Script" phase. In the script field, add the following command:
 
 ```bash
-# If the BuildTools is not built, build it.
-if [ ! -d "${SRCROOT}/BuildTools/.build/release" ]; then
+if [ ! -e "${SRCROOT}/BuildTools/.build/release/swifixture" ]; then
     xcrun --sdk macosx swift build -c release --package-path "${SRCROOT}/BuildTools"
 fi
 
-# Run Swifixture
-"${SRCROOT}/BuildTools/.build/release/Swifixture" \
-    --source "${SRCROOT}/Sources" \
-    --output "${SRCROOT}/Generated/Fixtures.swift"
+"${SRCROOT}/BuildTools/.build/release/swifixture"
 ```
+
+[NOTE] In Xcode 15 and later, the user script sandboxing setting must be **NO** for this script to work properly.
+
+<img width="451" alt="image" src="https://github.com/user-attachments/assets/d2e3e200-b870-4d0f-97e3-f582a80a0d08">
 
 ## 🚀 Usage
 
 Swifixture can be executed from the command line as an executable target. The basic syntax is as follows:
 
 ```bash
-swift run Swifixture [options]
+swift run swifixture [options]
 ```
 
 ### 🔧 Options
@@ -125,7 +125,7 @@ swift run Swifixture [options]
 To generate fixture methods for a Swift file located at `./MyStruct.swift` and output the results to `./Generated/Fixtures.swift` by default, you can run:
 
 ```bash
-swift run Swifixture --source ./MyStruct.swift
+swift run swifixture --source ./MyStruct.swift
 ```
 
 #### Using fixturable
@@ -223,7 +223,7 @@ extension User {
 If you want to include additional imports and a testable import, you can do so like this:
 
 ```bash
-swift run Swifixture \
+swift run swifixture \
     --source ./MyStruct.swift \
     --output ./Generated/Fixtures.swift \
     --additional-imports Combine SwiftUI \
@@ -276,7 +276,7 @@ We have prepared a test source file in `./Tests/SwifixtureTests/Resources/Source
 
 ```bash
 swift build
-swift run Swifixture --source ./Tests/SwifixtureTests/Resources/Source.swift
+swift run swifixture --source ./Tests/SwifixtureTests/Resources/Source.swift
 ```
 
 ## 📄 License
