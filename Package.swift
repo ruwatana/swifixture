@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "Sample",
+    name: "Swifixture",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .executable(name: "Swifixture", targets: ["Swifixture"]),
+        .executable(name: "swifixture", targets: ["Swifixture"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", from: "600.0.1"),
@@ -30,6 +30,6 @@ let package = Package(
             name: "SwifixtureTests",
             dependencies: ["Swifixture"],
             resources: [.copy("Resources")]
-        )
+        ),
     ]
 )
