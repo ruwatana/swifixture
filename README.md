@@ -1,6 +1,6 @@
 # 🧪 Swifixture
 
-![Swift Version](https://img.shields.io/badge/Swift-6.0-orange.svg) ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+[![build](https://github.com/ruwatana/swifixture/actions/workflows/build.yml/badge.svg)](https://github.com/ruwatana/swifixture/actions/workflows/build.yml) ![Swift Version](https://img.shields.io/badge/Swift-6.0-orange.svg) ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 Swifixture is a tool built as a Swift Package that automatically generates fixture methods for Swift.
 This tool is inspired by [uber/mockolo](https://github.com/uber/mockolo).
