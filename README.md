@@ -9,7 +9,7 @@ This tool is inspired by [uber/mockolo](https://github.com/uber/mockolo).
 
 - [📦 Installation](#-installation)
   - [💡 Basic](#-basic)
-  - [🔧 Install on your Xcode Project](#-install-on-your-xcode-project)
+  - [🔧 Install in your Xcode Project](#-install-in-your-xcode-project)
 - [🚀 Usage](#-usage)
   - [🔧 Options](#-options)
   - [💡 Example](#-example)
@@ -31,7 +31,7 @@ cd swifixture
 swift build
 ```
 
-### 🔧 Install on your Xcode Project
+### 🔧 Install in your Xcode Project
 
 We also recommend to run Swifixture on your Xcode build phases by `BuildTools` package.
 (The approach using BuildTools is inspired by [nicklockwood/SwiftFormat](https://github.com/nicklockwood/SwiftFormat/blob/0.55.1/README.md#xcode-build-phase))
@@ -55,7 +55,7 @@ cd BuildTools
 swift package init
 ```
 
-3. Add Swifixture as a dependency to the `Package.swift`
+3. Add Swifixture as a dependency in `Package.swift`
 
 ```swift
 // Package.swift
@@ -72,7 +72,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/ruwatana/swifixture.git",
-            branch: "main"  // NOTE: This package is working in progress
+            exact: Version("0.0.1")
         )
     ],
     targets: [
@@ -98,7 +98,7 @@ fi
 "${SRCROOT}/BuildTools/.build/release/swifixture"
 ```
 
-[NOTE] In Xcode 15 and later, the user script sandboxing setting must be **NO** for this script to work properly.
+[NOTE] In Xcode 15 and later, the `User Script Sandboxing` setting must be set to **NO** for this script to work properly.
 
 <img width="451" alt="image" src="https://github.com/user-attachments/assets/d2e3e200-b870-4d0f-97e3-f582a80a0d08">
 
@@ -122,7 +122,9 @@ swift run swifixture [options]
 
 ### 💡 Example
 
-To generate fixture methods for a Swift file located at `./MyStruct.swift` and output the results to `./Generated/Fixtures.swift` by default, you can run:
+To generate fixture methods for a Swift file located at `./MyStruct.swift` and output the results to `./Generated/Fixtures.swift` by default.
+
+you can run:
 
 ```bash
 swift run swifixture --source ./MyStruct.swift
@@ -254,7 +256,7 @@ Currently, Swifixture only supports auto-generating fixture methods for `struct`
 
 Additionally, it is limited to our defined primitive types such as `String`, `Int`, `Double`, etc.
 
-If you want to use custom types, you consider to use override settings or contribute to Swifixture!
+If you want to use custom types, consider using override settings or contribute to Swifixture!
 
 ## 🤝 Contributing
 

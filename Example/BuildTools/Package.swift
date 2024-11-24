@@ -17,7 +17,8 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/ruwatana/swifixture.git",
-            revision: "f78418cb05233bcc386f90c41c067de0491b4490")
+            exact: Version("0.0.1")
+        )
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
