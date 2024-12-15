@@ -68,6 +68,11 @@ struct VariousPropertiesStruct {
     let customEnumWithOverride: CustomEnum
     let customEnumWithOverride2: CustomEnum
     let otherFixturableStruct: CustomStruct
+    
+    let constant: String = "constant"
+    var computedProperty: String {
+        "computed property"
+    }
 }
 
 enum CustomEnum {
