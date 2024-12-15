@@ -117,7 +117,8 @@ struct Swifixture: ParsableCommand {
                     let firstBinding = variable.bindings.first,
                     let name = firstBinding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
                     let type = firstBinding.typeAnnotation?.type,
-                    firstBinding.initializer == nil
+                    firstBinding.initializer == nil,
+                    firstBinding.accessorBlock == nil
                 else {
                     return nil
                 }
