@@ -69,6 +69,16 @@ struct VariousPropertiesStruct {
     let customEnumWithOverride2: CustomEnum
     let otherFixturableStruct: CustomStruct
     
+    /// @fixturable
+    struct Nested {
+        let hoge: String
+
+        /// @fixturable
+        struct Nested2 {
+            let fuga: String
+        }
+    }
+    
     let constant: String = "constant"
     var computedProperty: String {
         "computed property"
