@@ -2,13 +2,13 @@ name: build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
 
 jobs:
   build:
     runs-on: macos-15
     steps:
-    - uses: actions/checkout@v4
-    - name: Build and tests
-      run: swift test
+      - uses: actions/checkout@v4
+      - name: Build and tests
+        run: swift test --no-parallel
