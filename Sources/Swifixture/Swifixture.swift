@@ -106,10 +106,11 @@ struct Swifixture: ParsableCommand {
         visitor.walk(sourceFile)
         return visitor.fixturableStructs
     }
-    
+
     private func buildFixtureExtensionSourceCode(for fixturableStruct: FixturableStruct) -> String {
         let structName = fixturableStruct.syntax.name.text
-        let properties: [(name: String, type: TypeSyntax)] = fixturableStruct.syntax.memberBlock
+        let properties: [(name: String, type: TypeSyntax)] = fixturableStruct.syntax
+            .memberBlock
             .members
             .compactMap { member in
                 guard
@@ -124,8 +125,8 @@ struct Swifixture: ParsableCommand {
                 }
                 return (name, type)
             }
-        
-        var sourceCode = "extension \(structName) {\n"
+
+        var sourceCode = "extension \(fixturableStruct.namespace.flatMap({ "\($0)\(structName)" }) ?? structName) {\n"
         sourceCode += "    static func fixture("
         
         let parameters = properties

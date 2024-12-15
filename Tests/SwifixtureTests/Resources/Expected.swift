@@ -107,3 +107,25 @@ extension VariousPropertiesStruct {
         )
     }
 }
+
+
+extension VariousPropertiesStruct.Nested {
+    static func fixture(
+        hoge: String = "hoge"
+    ) -> Self {
+        .init(
+            hoge: hoge
+        )
+    }
+}
+
+
+extension VariousPropertiesStruct.Nested.Nested2 {
+    static func fixture(
+        fuga: String = "fuga"
+    ) -> Self {
+        .init(
+            fuga: fuga
+        )
+    }
+}

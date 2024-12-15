@@ -23,7 +23,7 @@ final class FixturableStructVisitor: SyntaxVisitor {
                 return nil
             }
             .first { $0.contains(fixturableRegex) }
-        
+
         if let docComment {
             var overrideSettings: [String: String] = [:]
             for match in docComment.matches(of: overrideRegex) {
@@ -33,10 +33,22 @@ final class FixturableStructVisitor: SyntaxVisitor {
                     }
                 }
             }
-            
-            fixturableStructs.append(.init(syntax: node, overrideSettings: overrideSettings))
+
+            var currentNode: Syntax? = node._syntaxNode
+            var namespace: String? = nil
+            while let parent = currentNode?.parent {
+                guard let parentStruct = parent.as(StructDeclSyntax.self) else {
+                    currentNode = parent
+                    continue
+                }
+                
+                namespace = "\(parentStruct.name.text).\(namespace ?? "")"
+                currentNode = parentStruct._syntaxNode
+            }
+
+            fixturableStructs.append(.init(syntax: node, overrideSettings: overrideSettings, namespace: namespace))
         }
-        
-        return .skipChildren
+
+        return .visitChildren
     }
 }
