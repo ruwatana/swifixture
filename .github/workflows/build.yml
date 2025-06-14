@@ -7,8 +7,8 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build and tests
-        run: swift test --no-parallel
+        run: swift test --parallel
