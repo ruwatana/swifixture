@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build and tests
-        run: swift test --no-parallel
+        run: swift test --parallel
