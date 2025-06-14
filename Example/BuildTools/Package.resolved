@@ -1,12 +1,13 @@
 {
-  "originHash" : "957f7db42505120adb7eb17f46d0170db419139835dae1a56b93c9f5be43acca",
+  "originHash" : "789fd2fed317f5253fda945658224bf3df97a11706894ac0077ce14e5002635a",
   "pins" : [
     {
       "identity" : "swifixture",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ruwatana/swifixture.git",
       "state" : {
-        "revision" : "f78418cb05233bcc386f90c41c067de0491b4490"
+        "revision" : "f9e45a61f757ec6d6676470b2ecb16433cd9e132",
+        "version" : "0.0.1"
       }
     },
     {

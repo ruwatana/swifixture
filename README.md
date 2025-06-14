@@ -72,7 +72,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/ruwatana/swifixture.git",
-            exact: Version("x.x.x")
+            from: "0.0.1"
         )
     ],
     targets: [
