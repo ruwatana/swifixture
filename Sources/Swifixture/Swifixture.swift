@@ -170,18 +170,18 @@ struct Swifixture: ParsableCommand {
         
         if let attributedType = type.as(AttributedTypeSyntax.self),
            let baseType = attributedType.baseType.as(FunctionTypeSyntax.self),
-           !attributedType.attributes.contains(where: { $0.description == "@escaping" }) {
+           !attributedType.attributes.contains(where: { $0.trimmedDescription == "@escaping" }) {
             let attributes = attributedType.attributes
                 .map { $0.trimmedDescription }
                 .joined(separator: " ")
             return "\(attributes) \(attachEscapingAttribute(for: baseType))"
         }
         
-        return type.description
+        return type.trimmedDescription
     }
     
     private func attachEscapingAttribute(for type: FunctionTypeSyntax) -> String {
-        "@escaping \(type.description)"
+        "@escaping \(type.trimmedDescription)"
     }
     
     private func defaultValue(for type: TypeSyntax, name: String) -> String {
@@ -212,7 +212,7 @@ struct Swifixture: ParsableCommand {
                 value += " \(parameters) in"
             }
             
-            if ["Void", "()"].contains(functionType.returnClause.type.description) {
+            if ["Void", "()"].contains(functionType.returnClause.type.trimmedDescription) {
                 value += " }"
             } else {
                 let returnValue = defaultValue(for: functionType.returnClause.type, name: "")

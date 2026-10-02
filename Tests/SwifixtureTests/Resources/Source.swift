@@ -92,3 +92,6 @@ enum CustomEnum {
 
 /// @fixturable
 struct CustomStruct {}
+
+/// @fixturable
+struct OneLineStruct { let int: Int; let closure: (Int) -> Void }

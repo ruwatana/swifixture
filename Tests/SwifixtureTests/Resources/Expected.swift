@@ -12,6 +12,19 @@ extension CustomStruct {
 }
 
 
+extension OneLineStruct {
+    static func fixture(
+        int: Int = 0,
+        closure: @escaping (Int) -> Void = { _ in }
+    ) -> Self {
+        .init(
+            int: int,
+            closure: closure
+        )
+    }
+}
+
+
 extension VariousPropertiesStruct {
     static func fixture(
         any: Any = 0,
