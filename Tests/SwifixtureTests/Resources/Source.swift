@@ -42,6 +42,7 @@ struct VariousPropertiesStruct {
     let uuid: UUID
     
     let optional: String?
+    let optionalGeneric: Optional<String>
     let implicitlyUnwrappedOptional: String!
     
     let array: Array<String>
@@ -61,9 +62,7 @@ struct VariousPropertiesStruct {
     let closureOptional: (() -> Void)?
     let closureWithArguments: (Int) -> String
     let closureWithArgumentsOptional: ((Int) -> String)?
-    let attributeClosure: @autoclosure () -> Void
-    let escapingClosure: @escaping () -> Void
-    let escapingClosureOptional: @escaping (() -> Void)?
+    let sendableClosure: @Sendable () -> Void
     
     let customEnumWithOverride: CustomEnum
     let customEnumWithOverride2: CustomEnum
@@ -93,3 +92,66 @@ enum CustomEnum {
 
 /// @fixturable
 struct CustomStruct {}
+
+/// @fixturable
+struct OneLineStruct { let int: Int; let closure: (Int) -> Void }
+
+/// @fixturable
+struct MultipleBindingsStruct {
+    let int: Int, string: String
+    let x, y: Double
+    let constant = 0, flag: Bool
+}
+
+enum NamespaceEnum {
+    /// @fixturable
+    struct InEnum {
+        let string: String
+    }
+}
+
+final class NamespaceClass {
+    /// @fixturable
+    struct InClass {
+        let string: String
+    }
+}
+
+extension NamespaceEnum {
+    /// @fixturable
+    struct InExtension {
+        let string: String
+    }
+}
+
+/// @fixturable
+struct ModuleQualifiedTypesStruct {
+    let string: Swift.String
+    let array: Swift.Array<Int>
+    let date: Foundation.Date
+}
+
+/// @fixturable
+struct ExistentialTypesStruct {
+    let error: Error
+    let anyError: any Error
+}
+
+/// @fixturable
+struct MoreStandardTypesStruct {
+    let cgFloat: CGFloat
+    let decimal: Decimal
+    let duration: Duration
+    let int128: Int128
+    let substring: Substring
+    let uint128: UInt128
+}
+
+/// @fixturable(override: string = "a, b", int = -1, double = 1.5 * 2, date = .init(timeIntervalSince1970: 0), range = 0..<10)
+struct OverrideExpressionsStruct {
+    let string: String
+    let int: Int
+    let double: Double
+    let date: Date
+    let range: Range<Int>
+}

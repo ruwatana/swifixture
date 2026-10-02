@@ -12,6 +12,139 @@ extension CustomStruct {
 }
 
 
+extension ExistentialTypesStruct {
+    static func fixture(
+        error: Error = NSError(domain: "error", code: 0, userInfo: [:]),
+        anyError: any Error = NSError(domain: "anyError", code: 0, userInfo: [:])
+    ) -> Self {
+        .init(
+            error: error,
+            anyError: anyError
+        )
+    }
+}
+
+
+extension ModuleQualifiedTypesStruct {
+    static func fixture(
+        string: Swift.String = "string",
+        array: Swift.Array<Int> = [],
+        date: Foundation.Date = .init()
+    ) -> Self {
+        .init(
+            string: string,
+            array: array,
+            date: date
+        )
+    }
+}
+
+
+extension MoreStandardTypesStruct {
+    static func fixture(
+        cgFloat: CGFloat = 0.0,
+        decimal: Decimal = 0,
+        duration: Duration = .zero,
+        int128: Int128 = 0,
+        substring: Substring = "substring",
+        uint128: UInt128 = 0
+    ) -> Self {
+        .init(
+            cgFloat: cgFloat,
+            decimal: decimal,
+            duration: duration,
+            int128: int128,
+            substring: substring,
+            uint128: uint128
+        )
+    }
+}
+
+
+extension MultipleBindingsStruct {
+    static func fixture(
+        int: Int = 0,
+        string: String = "string",
+        x: Double = 0.0,
+        y: Double = 0.0,
+        flag: Bool = false
+    ) -> Self {
+        .init(
+            int: int,
+            string: string,
+            x: x,
+            y: y,
+            flag: flag
+        )
+    }
+}
+
+
+extension NamespaceClass.InClass {
+    static func fixture(
+        string: String = "string"
+    ) -> Self {
+        .init(
+            string: string
+        )
+    }
+}
+
+
+extension NamespaceEnum.InEnum {
+    static func fixture(
+        string: String = "string"
+    ) -> Self {
+        .init(
+            string: string
+        )
+    }
+}
+
+
+extension NamespaceEnum.InExtension {
+    static func fixture(
+        string: String = "string"
+    ) -> Self {
+        .init(
+            string: string
+        )
+    }
+}
+
+
+extension OneLineStruct {
+    static func fixture(
+        int: Int = 0,
+        closure: @escaping (Int) -> Void = { _ in }
+    ) -> Self {
+        .init(
+            int: int,
+            closure: closure
+        )
+    }
+}
+
+
+extension OverrideExpressionsStruct {
+    static func fixture(
+        string: String = "a, b",
+        int: Int = -1,
+        double: Double = 1.5 * 2,
+        date: Date = .init(timeIntervalSince1970: 0),
+        range: Range<Int> = 0..<10
+    ) -> Self {
+        .init(
+            string: string,
+            int: int,
+            double: double,
+            date: date,
+            range: range
+        )
+    }
+}
+
+
 extension VariousPropertiesStruct {
     static func fixture(
         any: Any = 0,
@@ -37,11 +170,12 @@ extension VariousPropertiesStruct {
         url: URL = .init(string: "http://localhost")!,
         uuid: UUID = .init(),
         optional: String? = nil,
+        optionalGeneric: Optional<String> = nil,
         implicitlyUnwrappedOptional: String! = "implicitlyUnwrappedOptional",
-        array: Array<String> = .fixture(),
+        array: Array<String> = [],
         arrayLiteral: [String] = [],
         arrayOptional: [String]? = nil,
-        dictionary: Dictionary<String, Any> = .fixture(),
+        dictionary: Dictionary<String, Any> = [:],
         dictionaryLiteral: [String: Any] = [:],
         dictionaryOptional: [String: Any]? = nil,
         tuple: (String, Int) = ("0", 0),
@@ -52,9 +186,7 @@ extension VariousPropertiesStruct {
         closureOptional: (() -> Void)? = nil,
         closureWithArguments: @escaping (Int) -> String = { _ in "" },
         closureWithArgumentsOptional: ((Int) -> String)? = nil,
-        attributeClosure: @autoclosure @escaping () -> Void = { },
-        escapingClosure: @escaping @escaping () -> Void = { },
-        escapingClosureOptional: @escaping (() -> Void)? = nil,
+        sendableClosure: @Sendable @escaping () -> Void = { },
         customEnumWithOverride: CustomEnum = .a,
         customEnumWithOverride2: CustomEnum = .b,
         otherFixturableStruct: CustomStruct = .fixture()
@@ -83,6 +215,7 @@ extension VariousPropertiesStruct {
             url: url,
             uuid: uuid,
             optional: optional,
+            optionalGeneric: optionalGeneric,
             implicitlyUnwrappedOptional: implicitlyUnwrappedOptional,
             array: array,
             arrayLiteral: arrayLiteral,
@@ -98,9 +231,7 @@ extension VariousPropertiesStruct {
             closureOptional: closureOptional,
             closureWithArguments: closureWithArguments,
             closureWithArgumentsOptional: closureWithArgumentsOptional,
-            attributeClosure: attributeClosure,
-            escapingClosure: escapingClosure,
-            escapingClosureOptional: escapingClosureOptional,
+            sendableClosure: sendableClosure,
             customEnumWithOverride: customEnumWithOverride,
             customEnumWithOverride2: customEnumWithOverride2,
             otherFixturableStruct: otherFixturableStruct

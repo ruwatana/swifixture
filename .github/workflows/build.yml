@@ -6,11 +6,42 @@ on:
   pull_request:
 
 jobs:
+  # Package.resolved pins the lowest supported versions of dependencies
   build:
+    name: Build and tests (Xcode ${{ matrix.xcode }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            xcode: "16.0" # Swift 6.0
+          - os: macos-15
+            xcode: "16.4" # Swift 6.1
+          - os: macos-26
+            xcode: "26.0.1" # Swift 6.2
+          - os: macos-26
+            xcode: "26.6" # Swift 6.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_${{ matrix.xcode }}.app"
+      - name: Show Swift version
+        run: swift --version
+      - name: Build and tests
+        run: swift test --parallel
+      - name: Typecheck generated fixtures
+        run: |
+          xcrun swiftc -typecheck \
+            Tests/SwifixtureTests/Resources/Source.swift \
+            Tests/SwifixtureTests/Resources/Expected.swift
+
+  latest-dependencies:
+    name: Build and tests (latest dependencies)
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
-      - name: Show Swift version
-        run: swift --version
+      - name: Update dependencies
+        run: swift package update
       - name: Build and tests
         run: swift test --parallel

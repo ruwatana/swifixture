@@ -112,18 +112,28 @@ struct Swifixture: ParsableCommand {
         let properties: [(name: String, type: TypeSyntax)] = fixturableStruct.syntax
             .memberBlock
             .members
-            .compactMap { member in
-                guard
-                    let variable = member.decl.as(VariableDeclSyntax.self),
-                    let firstBinding = variable.bindings.first,
-                    let name = firstBinding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
-                    let type = firstBinding.typeAnnotation?.type,
-                    firstBinding.initializer == nil,
-                    firstBinding.accessorBlock == nil
-                else {
-                    return nil
+            .flatMap { member -> [(name: String, type: TypeSyntax)] in
+                guard let variable = member.decl.as(VariableDeclSyntax.self) else {
+                    return []
                 }
-                return (name, type)
+
+                var properties: [(name: String, type: TypeSyntax)] = []
+                var currentType: TypeSyntax?
+                // In `let a, b: Int`, `a` has no type annotation and shares the type of `b`,
+                // so iterate the bindings in reverse order to propagate the type.
+                for binding in variable.bindings.reversed() {
+                    currentType = binding.typeAnnotation?.type ?? (binding.initializer == nil ? currentType : nil)
+                    guard
+                        let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
+                        let type = currentType,
+                        binding.initializer == nil,
+                        binding.accessorBlock == nil
+                    else {
+                        continue
+                    }
+                    properties.insert((name, type), at: 0)
+                }
+                return properties
             }
 
         var sourceCode = "extension \(fixturableStruct.namespace.flatMap({ "\($0)\(structName)" }) ?? structName) {\n"
@@ -170,18 +180,18 @@ struct Swifixture: ParsableCommand {
         
         if let attributedType = type.as(AttributedTypeSyntax.self),
            let baseType = attributedType.baseType.as(FunctionTypeSyntax.self),
-           !attributedType.attributes.contains(where: { $0.description == "@escaping" }) {
+           !attributedType.attributes.contains(where: { $0.trimmedDescription == "@escaping" }) {
             let attributes = attributedType.attributes
                 .map { $0.trimmedDescription }
                 .joined(separator: " ")
             return "\(attributes) \(attachEscapingAttribute(for: baseType))"
         }
         
-        return type.description
+        return type.trimmedDescription
     }
     
     private func attachEscapingAttribute(for type: FunctionTypeSyntax) -> String {
-        "@escaping \(type.description)"
+        "@escaping \(type.trimmedDescription)"
     }
     
     private func defaultValue(for type: TypeSyntax, name: String) -> String {
@@ -212,7 +222,7 @@ struct Swifixture: ParsableCommand {
                 value += " \(parameters) in"
             }
             
-            if ["Void", "()"].contains(functionType.returnClause.type.description) {
+            if ["Void", "()"].contains(functionType.returnClause.type.trimmedDescription) {
                 value += " }"
             } else {
                 let returnValue = defaultValue(for: functionType.returnClause.type, name: "")
@@ -222,30 +232,49 @@ struct Swifixture: ParsableCommand {
             return value
         } else if let attributedType = type.as(AttributedTypeSyntax.self) {
             return defaultValue(for: attributedType.baseType, name: name)
+        } else if let someOrAnyType = type.as(SomeOrAnyTypeSyntax.self),
+                  someOrAnyType.someOrAnySpecifier.tokenKind == .keyword(.any) {
+            // Existential types such as `any Error`
+            return defaultValue(for: someOrAnyType.constraint, name: name)
         } else if let identifierType = type.as(IdentifierTypeSyntax.self),
-                  let defaultValue = defaultValue(for: identifierType, name: name) {
+                  let defaultValue = defaultValue(forTypeName: identifierType.name.text, name: name) {
+            return defaultValue
+        } else if let memberType = type.as(MemberTypeSyntax.self),
+                  ["Swift", "Foundation"].contains(memberType.baseType.trimmedDescription),
+                  let defaultValue = defaultValue(forTypeName: memberType.name.text, name: name) {
+            // Module-qualified types such as `Swift.String` or `Foundation.Date`
             return defaultValue
         }
         
         return ".fixture()"
     }
     
-    private func defaultValue(for identifierType: IdentifierTypeSyntax, name: String) -> String? {
-        switch identifierType.name.text {
+    private func defaultValue(forTypeName typeName: String, name: String) -> String? {
+        switch typeName {
         case String(describing: Any.self):
             return "0"
         case String(describing: AnyObject.self):
             return "0 as AnyObject"
+        case "Array":
+            return "[]"
         case String(describing: Bool.self):
             return "false"
+        case String(describing: CGFloat.self):
+            return "0.0"
         case String(describing: Character.self):
             return "\"\(name.first ?? "a")\""
         case String(describing: Data.self):
             return ".init()"
         case String(describing: Date.self):
             return ".init()"
+        case "Decimal": // String(describing: Decimal.self) returns "NSDecimal" with older Foundation on Darwin
+            return "0"
+        case "Dictionary":
+            return "[:]"
         case String(describing: Double.self):
             return "0.0"
+        case String(describing: Duration.self):
+            return ".zero"
         case String(describing: Error.self):
             return "NSError(domain: \"\(name)\", code: 0, userInfo: [:])"
         case String(describing: Float.self):
@@ -260,9 +289,15 @@ struct Swifixture: ParsableCommand {
             return "0"
         case String(describing: Int64.self):
             return "0"
+        case "Int128": // Available from macOS 15
+            return "0"
+        case "Optional":
+            return "nil"
         case String(describing: Set<AnyHashable>.self).components(separatedBy: "<").first!:  // "Set"
             return "[]"
         case String(describing: String.self):
+            return "\"\(name)\""
+        case String(describing: Substring.self):
             return "\"\(name)\""
         case "TimeInterval": // String(describing: TimeInterval.self) returns an entity of typealias
             return "0.0"
@@ -275,6 +310,8 @@ struct Swifixture: ParsableCommand {
         case String(describing: UInt32.self):
             return "0"
         case String(describing: UInt64.self):
+            return "0"
+        case "UInt128": // Available from macOS 15
             return "0"
         case String(describing: URL.self):
             return ".init(string: \"http://localhost\")!"
