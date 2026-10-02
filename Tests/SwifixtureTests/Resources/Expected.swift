@@ -12,6 +12,25 @@ extension CustomStruct {
 }
 
 
+extension MultipleBindingsStruct {
+    static func fixture(
+        int: Int = 0,
+        string: String = "string",
+        x: Double = 0.0,
+        y: Double = 0.0,
+        flag: Bool = false
+    ) -> Self {
+        .init(
+            int: int,
+            string: string,
+            x: x,
+            y: y,
+            flag: flag
+        )
+    }
+}
+
+
 extension OneLineStruct {
     static func fixture(
         int: Int = 0,

@@ -112,18 +112,28 @@ struct Swifixture: ParsableCommand {
         let properties: [(name: String, type: TypeSyntax)] = fixturableStruct.syntax
             .memberBlock
             .members
-            .compactMap { member in
-                guard
-                    let variable = member.decl.as(VariableDeclSyntax.self),
-                    let firstBinding = variable.bindings.first,
-                    let name = firstBinding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
-                    let type = firstBinding.typeAnnotation?.type,
-                    firstBinding.initializer == nil,
-                    firstBinding.accessorBlock == nil
-                else {
-                    return nil
+            .flatMap { member -> [(name: String, type: TypeSyntax)] in
+                guard let variable = member.decl.as(VariableDeclSyntax.self) else {
+                    return []
                 }
-                return (name, type)
+
+                var properties: [(name: String, type: TypeSyntax)] = []
+                var currentType: TypeSyntax?
+                // In `let a, b: Int`, `a` has no type annotation and shares the type of `b`,
+                // so iterate the bindings in reverse order to propagate the type.
+                for binding in variable.bindings.reversed() {
+                    currentType = binding.typeAnnotation?.type ?? (binding.initializer == nil ? currentType : nil)
+                    guard
+                        let name = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
+                        let type = currentType,
+                        binding.initializer == nil,
+                        binding.accessorBlock == nil
+                    else {
+                        continue
+                    }
+                    properties.insert((name, type), at: 0)
+                }
+                return properties
             }
 
         var sourceCode = "extension \(fixturableStruct.namespace.flatMap({ "\($0)\(structName)" }) ?? structName) {\n"

@@ -95,3 +95,10 @@ struct CustomStruct {}
 
 /// @fixturable
 struct OneLineStruct { let int: Int; let closure: (Int) -> Void }
+
+/// @fixturable
+struct MultipleBindingsStruct {
+    let int: Int, string: String
+    let x, y: Double
+    let constant = 0, flag: Bool
+}
