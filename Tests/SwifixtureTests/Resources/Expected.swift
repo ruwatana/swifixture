@@ -40,6 +40,27 @@ extension ModuleQualifiedTypesStruct {
 }
 
 
+extension MoreStandardTypesStruct {
+    static func fixture(
+        cgFloat: CGFloat = 0.0,
+        decimal: Decimal = 0,
+        duration: Duration = .zero,
+        int128: Int128 = 0,
+        substring: Substring = "substring",
+        uint128: UInt128 = 0
+    ) -> Self {
+        .init(
+            cgFloat: cgFloat,
+            decimal: decimal,
+            duration: duration,
+            int128: int128,
+            substring: substring,
+            uint128: uint128
+        )
+    }
+}
+
+
 extension MultipleBindingsStruct {
     static func fixture(
         int: Int = 0,

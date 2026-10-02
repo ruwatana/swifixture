@@ -259,16 +259,22 @@ struct Swifixture: ParsableCommand {
             return "[]"
         case String(describing: Bool.self):
             return "false"
+        case String(describing: CGFloat.self):
+            return "0.0"
         case String(describing: Character.self):
             return "\"\(name.first ?? "a")\""
         case String(describing: Data.self):
             return ".init()"
         case String(describing: Date.self):
             return ".init()"
+        case "Decimal": // String(describing: Decimal.self) returns "NSDecimal" with older Foundation on Darwin
+            return "0"
         case "Dictionary":
             return "[:]"
         case String(describing: Double.self):
             return "0.0"
+        case String(describing: Duration.self):
+            return ".zero"
         case String(describing: Error.self):
             return "NSError(domain: \"\(name)\", code: 0, userInfo: [:])"
         case String(describing: Float.self):
@@ -283,11 +289,15 @@ struct Swifixture: ParsableCommand {
             return "0"
         case String(describing: Int64.self):
             return "0"
+        case "Int128": // Available from macOS 15
+            return "0"
         case "Optional":
             return "nil"
         case String(describing: Set<AnyHashable>.self).components(separatedBy: "<").first!:  // "Set"
             return "[]"
         case String(describing: String.self):
+            return "\"\(name)\""
+        case String(describing: Substring.self):
             return "\"\(name)\""
         case "TimeInterval": // String(describing: TimeInterval.self) returns an entity of typealias
             return "0.0"
@@ -300,6 +310,8 @@ struct Swifixture: ParsableCommand {
         case String(describing: UInt32.self):
             return "0"
         case String(describing: UInt64.self):
+            return "0"
+        case "UInt128": // Available from macOS 15
             return "0"
         case String(describing: URL.self):
             return ".init(string: \"http://localhost\")!"

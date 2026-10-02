@@ -136,3 +136,13 @@ struct ExistentialTypesStruct {
     let error: Error
     let anyError: any Error
 }
+
+/// @fixturable
+struct MoreStandardTypesStruct {
+    let cgFloat: CGFloat
+    let decimal: Decimal
+    let duration: Duration
+    let int128: Int128
+    let substring: Substring
+    let uint128: UInt128
+}
