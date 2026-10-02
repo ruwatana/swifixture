@@ -232,6 +232,10 @@ struct Swifixture: ParsableCommand {
             return value
         } else if let attributedType = type.as(AttributedTypeSyntax.self) {
             return defaultValue(for: attributedType.baseType, name: name)
+        } else if let someOrAnyType = type.as(SomeOrAnyTypeSyntax.self),
+                  someOrAnyType.someOrAnySpecifier.tokenKind == .keyword(.any) {
+            // Existential types such as `any Error`
+            return defaultValue(for: someOrAnyType.constraint, name: name)
         } else if let identifierType = type.as(IdentifierTypeSyntax.self),
                   let defaultValue = defaultValue(forTypeName: identifierType.name.text, name: name) {
             return defaultValue

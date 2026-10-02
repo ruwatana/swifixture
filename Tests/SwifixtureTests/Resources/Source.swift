@@ -130,3 +130,9 @@ struct ModuleQualifiedTypesStruct {
     let array: Swift.Array<Int>
     let date: Foundation.Date
 }
+
+/// @fixturable
+struct ExistentialTypesStruct {
+    let error: Error
+    let anyError: any Error
+}

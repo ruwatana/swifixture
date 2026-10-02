@@ -12,6 +12,19 @@ extension CustomStruct {
 }
 
 
+extension ExistentialTypesStruct {
+    static func fixture(
+        error: Error = NSError(domain: "error", code: 0, userInfo: [:]),
+        anyError: any Error = NSError(domain: "anyError", code: 0, userInfo: [:])
+    ) -> Self {
+        .init(
+            error: error,
+            anyError: anyError
+        )
+    }
+}
+
+
 extension ModuleQualifiedTypesStruct {
     static func fixture(
         string: Swift.String = "string",
