@@ -126,6 +126,25 @@ extension OneLineStruct {
 }
 
 
+extension OverrideExpressionsStruct {
+    static func fixture(
+        string: String = "a, b",
+        int: Int = -1,
+        double: Double = 1.5 * 2,
+        date: Date = .init(timeIntervalSince1970: 0),
+        range: Range<Int> = 0..<10
+    ) -> Self {
+        .init(
+            string: string,
+            int: int,
+            double: double,
+            date: date,
+            range: range
+        )
+    }
+}
+
+
 extension VariousPropertiesStruct {
     static func fixture(
         any: Any = 0,

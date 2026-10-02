@@ -146,3 +146,12 @@ struct MoreStandardTypesStruct {
     let substring: Substring
     let uint128: UInt128
 }
+
+/// @fixturable(override: string = "a, b", int = -1, double = 1.5 * 2, date = .init(timeIntervalSince1970: 0), range = 0..<10)
+struct OverrideExpressionsStruct {
+    let string: String
+    let int: Int
+    let double: Double
+    let date: Date
+    let range: Range<Int>
+}
