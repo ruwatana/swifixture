@@ -30,6 +30,11 @@ jobs:
         run: swift --version
       - name: Build and tests
         run: swift test --parallel
+      - name: Typecheck generated fixtures
+        run: |
+          xcrun swiftc -typecheck \
+            Tests/SwifixtureTests/Resources/Source.swift \
+            Tests/SwifixtureTests/Resources/Expected.swift
 
   latest-dependencies:
     name: Build and tests (latest dependencies)
