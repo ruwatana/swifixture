@@ -1,6 +1,6 @@
 # 🧪 Swifixture
 
-[![build](https://github.com/ruwatana/swifixture/actions/workflows/build.yml/badge.svg)](https://github.com/ruwatana/swifixture/actions/workflows/build.yml) ![Swift Version](https://img.shields.io/badge/Swift-6.2-orange.svg) ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+[![build](https://github.com/ruwatana/swifixture/actions/workflows/build.yml/badge.svg)](https://github.com/ruwatana/swifixture/actions/workflows/build.yml) ![Swift Version](https://img.shields.io/badge/Swift-6.0%2B-orange.svg) ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
 Swifixture is a tool built as a Swift Package that automatically generates fixture methods for Swift.
 This tool is inspired by [uber/mockolo](https://github.com/uber/mockolo).
@@ -72,7 +72,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/ruwatana/swifixture.git",
-            from: "0.0.1"
+            from: "0.1.0"
         )
     ],
     targets: [
@@ -258,6 +258,16 @@ Additionally, it is limited to our defined primitive types such as `String`, `In
 
 If you want to use custom types, consider using override settings or contribute to Swifixture!
 
+The following are not supported yet:
+
+- Generic structs (e.g. `struct Box<T>`)
+- Structs with explicit initializers, since the generated fixture method calls the memberwise initializer
+- Structs with `private` or `fileprivate` stored properties, since the memberwise initializer becomes inaccessible
+- Stored properties declared in `#if` blocks
+- Type aliases of primitive types (e.g. `typealias UserID = String`), metatypes and inline arrays
+- Structs declared in functions
+- `/** @fixturable */` style doc comments
+
 ## 🤝 Contributing
 
 We welcome contributions to improve Swifixture! Please feel free to submit a pull request or open an issue for any bugs or feature requests.
@@ -269,6 +279,12 @@ Open this project in Xcode and edit the code.
 #### Test
 
 We have prepared a xctestplan, so you can run the test in Xcode.
+
+The generated fixtures in `./Tests/SwifixtureTests/Resources/Expected.swift` must be valid Swift code. You can check it with:
+
+```bash
+swiftc -typecheck Tests/SwifixtureTests/Resources/Source.swift Tests/SwifixtureTests/Resources/Expected.swift
+```
 
 #### Build and Run
 
