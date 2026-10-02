@@ -236,6 +236,8 @@ struct Swifixture: ParsableCommand {
             return "0"
         case String(describing: AnyObject.self):
             return "0 as AnyObject"
+        case "Array":
+            return "[]"
         case String(describing: Bool.self):
             return "false"
         case String(describing: Character.self):
@@ -244,6 +246,8 @@ struct Swifixture: ParsableCommand {
             return ".init()"
         case String(describing: Date.self):
             return ".init()"
+        case "Dictionary":
+            return "[:]"
         case String(describing: Double.self):
             return "0.0"
         case String(describing: Error.self):
@@ -260,6 +264,8 @@ struct Swifixture: ParsableCommand {
             return "0"
         case String(describing: Int64.self):
             return "0"
+        case "Optional":
+            return "nil"
         case String(describing: Set<AnyHashable>.self).components(separatedBy: "<").first!:  // "Set"
             return "[]"
         case String(describing: String.self):

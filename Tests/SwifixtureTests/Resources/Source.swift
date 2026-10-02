@@ -42,6 +42,7 @@ struct VariousPropertiesStruct {
     let uuid: UUID
     
     let optional: String?
+    let optionalGeneric: Optional<String>
     let implicitlyUnwrappedOptional: String!
     
     let array: Array<String>
