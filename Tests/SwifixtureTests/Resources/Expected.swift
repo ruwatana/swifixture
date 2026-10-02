@@ -52,9 +52,7 @@ extension VariousPropertiesStruct {
         closureOptional: (() -> Void)? = nil,
         closureWithArguments: @escaping (Int) -> String = { _ in "" },
         closureWithArgumentsOptional: ((Int) -> String)? = nil,
-        attributeClosure: @autoclosure @escaping () -> Void = { },
-        escapingClosure: @escaping @escaping () -> Void = { },
-        escapingClosureOptional: @escaping (() -> Void)? = nil,
+        sendableClosure: @Sendable @escaping () -> Void = { },
         customEnumWithOverride: CustomEnum = .a,
         customEnumWithOverride2: CustomEnum = .b,
         otherFixturableStruct: CustomStruct = .fixture()
@@ -98,9 +96,7 @@ extension VariousPropertiesStruct {
             closureOptional: closureOptional,
             closureWithArguments: closureWithArguments,
             closureWithArgumentsOptional: closureWithArgumentsOptional,
-            attributeClosure: attributeClosure,
-            escapingClosure: escapingClosure,
-            escapingClosureOptional: escapingClosureOptional,
+            sendableClosure: sendableClosure,
             customEnumWithOverride: customEnumWithOverride,
             customEnumWithOverride2: customEnumWithOverride2,
             otherFixturableStruct: otherFixturableStruct

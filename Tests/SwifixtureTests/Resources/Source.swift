@@ -61,9 +61,7 @@ struct VariousPropertiesStruct {
     let closureOptional: (() -> Void)?
     let closureWithArguments: (Int) -> String
     let closureWithArgumentsOptional: ((Int) -> String)?
-    let attributeClosure: @autoclosure () -> Void
-    let escapingClosure: @escaping () -> Void
-    let escapingClosureOptional: @escaping (() -> Void)?
+    let sendableClosure: @Sendable () -> Void
     
     let customEnumWithOverride: CustomEnum
     let customEnumWithOverride2: CustomEnum
