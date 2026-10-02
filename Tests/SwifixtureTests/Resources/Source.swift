@@ -123,3 +123,10 @@ extension NamespaceEnum {
         let string: String
     }
 }
+
+/// @fixturable
+struct ModuleQualifiedTypesStruct {
+    let string: Swift.String
+    let array: Swift.Array<Int>
+    let date: Foundation.Date
+}

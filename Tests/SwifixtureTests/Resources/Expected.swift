@@ -12,6 +12,21 @@ extension CustomStruct {
 }
 
 
+extension ModuleQualifiedTypesStruct {
+    static func fixture(
+        string: Swift.String = "string",
+        array: Swift.Array<Int> = [],
+        date: Foundation.Date = .init()
+    ) -> Self {
+        .init(
+            string: string,
+            array: array,
+            date: date
+        )
+    }
+}
+
+
 extension MultipleBindingsStruct {
     static func fixture(
         int: Int = 0,

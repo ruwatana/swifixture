@@ -233,15 +233,20 @@ struct Swifixture: ParsableCommand {
         } else if let attributedType = type.as(AttributedTypeSyntax.self) {
             return defaultValue(for: attributedType.baseType, name: name)
         } else if let identifierType = type.as(IdentifierTypeSyntax.self),
-                  let defaultValue = defaultValue(for: identifierType, name: name) {
+                  let defaultValue = defaultValue(forTypeName: identifierType.name.text, name: name) {
+            return defaultValue
+        } else if let memberType = type.as(MemberTypeSyntax.self),
+                  ["Swift", "Foundation"].contains(memberType.baseType.trimmedDescription),
+                  let defaultValue = defaultValue(forTypeName: memberType.name.text, name: name) {
+            // Module-qualified types such as `Swift.String` or `Foundation.Date`
             return defaultValue
         }
         
         return ".fixture()"
     }
     
-    private func defaultValue(for identifierType: IdentifierTypeSyntax, name: String) -> String? {
-        switch identifierType.name.text {
+    private func defaultValue(forTypeName typeName: String, name: String) -> String? {
+        switch typeName {
         case String(describing: Any.self):
             return "0"
         case String(describing: AnyObject.self):
