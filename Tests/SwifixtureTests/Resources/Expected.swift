@@ -31,6 +31,39 @@ extension MultipleBindingsStruct {
 }
 
 
+extension NamespaceClass.InClass {
+    static func fixture(
+        string: String = "string"
+    ) -> Self {
+        .init(
+            string: string
+        )
+    }
+}
+
+
+extension NamespaceEnum.InEnum {
+    static func fixture(
+        string: String = "string"
+    ) -> Self {
+        .init(
+            string: string
+        )
+    }
+}
+
+
+extension NamespaceEnum.InExtension {
+    static func fixture(
+        string: String = "string"
+    ) -> Self {
+        .init(
+            string: string
+        )
+    }
+}
+
+
 extension OneLineStruct {
     static func fixture(
         int: Int = 0,

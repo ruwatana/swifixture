@@ -37,18 +37,31 @@ final class FixturableStructVisitor: SyntaxVisitor {
             var currentNode: Syntax? = node._syntaxNode
             var namespace: String? = nil
             while let parent = currentNode?.parent {
-                guard let parentStruct = parent.as(StructDeclSyntax.self) else {
-                    currentNode = parent
-                    continue
+                if let parentName = typeName(of: parent) {
+                    namespace = "\(parentName).\(namespace ?? "")"
                 }
-                
-                namespace = "\(parentStruct.name.text).\(namespace ?? "")"
-                currentNode = parentStruct._syntaxNode
+                currentNode = parent
             }
 
             fixturableStructs.append(.init(syntax: node, overrideSettings: overrideSettings, namespace: namespace))
         }
 
         return .visitChildren
+    }
+
+    /// Returns the name of the type that can contain nested types.
+    private func typeName(of node: Syntax) -> String? {
+        if let structDecl = node.as(StructDeclSyntax.self) {
+            return structDecl.name.text
+        } else if let enumDecl = node.as(EnumDeclSyntax.self) {
+            return enumDecl.name.text
+        } else if let classDecl = node.as(ClassDeclSyntax.self) {
+            return classDecl.name.text
+        } else if let actorDecl = node.as(ActorDeclSyntax.self) {
+            return actorDecl.name.text
+        } else if let extensionDecl = node.as(ExtensionDeclSyntax.self) {
+            return extensionDecl.extendedType.trimmedDescription
+        }
+        return nil
     }
 }

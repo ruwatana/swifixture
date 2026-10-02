@@ -102,3 +102,24 @@ struct MultipleBindingsStruct {
     let x, y: Double
     let constant = 0, flag: Bool
 }
+
+enum NamespaceEnum {
+    /// @fixturable
+    struct InEnum {
+        let string: String
+    }
+}
+
+final class NamespaceClass {
+    /// @fixturable
+    struct InClass {
+        let string: String
+    }
+}
+
+extension NamespaceEnum {
+    /// @fixturable
+    struct InExtension {
+        let string: String
+    }
+}
