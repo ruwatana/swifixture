@@ -21,17 +21,18 @@ import Testing
 @testable import Swifixture
 
 final class SwifixtureTests {
-    private let sourceFile = "Sample.swift"
-    private let outputFile = "Fixtures.swift"
-    
+    // Use a unique directory per test so tests can run in parallel
+    private let workingDirectory = FileManager.default.temporaryDirectory
+        .appendingPathComponent("SwifixtureTests-\(UUID().uuidString)")
+    private var sourceFile: String { workingDirectory.appendingPathComponent("Sample.swift").path }
+    private var outputFile: String { workingDirectory.appendingPathComponent("Fixtures.swift").path }
+
     init() async throws {
-        try? FileManager.default.removeItem(at: URL(fileURLWithPath: sourceFile))
-        try? FileManager.default.removeItem(at: URL(fileURLWithPath: outputFile))
+        try FileManager.default.createDirectory(at: workingDirectory, withIntermediateDirectories: true)
     }
-    
+
     deinit {
-        try? FileManager.default.removeItem(at: URL(fileURLWithPath: sourceFile))
-        try? FileManager.default.removeItem(at: URL(fileURLWithPath: outputFile))
+        try? FileManager.default.removeItem(at: workingDirectory)
     }
     
     @Test func run() async throws {

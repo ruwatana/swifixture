@@ -1,13 +1,13 @@
 {
-  "originHash" : "789fd2fed317f5253fda945658224bf3df97a11706894ac0077ce14e5002635a",
+  "originHash" : "640f30f94d04754226a229df717fa2ac089104644e3725735ccfe1e5b779e87c",
   "pins" : [
     {
       "identity" : "swifixture",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ruwatana/swifixture.git",
       "state" : {
-        "revision" : "f9e45a61f757ec6d6676470b2ecb16433cd9e132",
-        "version" : "0.0.1"
+        "revision" : "8bd9be85b751bc57f13a7fd7478bed68b8da736f",
+        "version" : "0.0.5"
       }
     },
     {
@@ -15,17 +15,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser.git",
       "state" : {
-        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
-        "version" : "1.5.0"
+        "revision" : "011f0c765fb46d9cac61bca19be0527e99c98c8b",
+        "version" : "1.5.1"
       }
     },
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
-        "revision" : "0687f71944021d616d34d922343dcef086855920",
-        "version" : "600.0.1"
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
       }
     }
   ],
