@@ -6,11 +6,73 @@ on:
   pull_request:
 
 jobs:
+  # Package.resolved pins the lowest supported versions of dependencies
   build:
-    runs-on: macos-26
+    name: Build and tests (Xcode ${{ matrix.xcode }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            xcode: "16.0" # Swift 6.0
+          - os: macos-15
+            xcode: "16.4" # Swift 6.1
+          - os: macos-26
+            xcode: "26.0.1" # Swift 6.2
+          - os: macos-26
+            xcode: "26.6"
     steps:
       - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_${{ matrix.xcode }}.app"
       - name: Show Swift version
         run: swift --version
       - name: Build and tests
         run: swift test --parallel
+
+  latest-dependencies:
+    name: Build and tests (latest dependencies)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update dependencies
+        run: swift package update
+      - name: Build and tests
+        run: swift test --parallel
+
+  # Swifixture is often installed together with mockolo in the same package,
+  # so make sure that both can be resolved with the latest mockolo
+  mockolo-compatibility:
+    name: Resolve with latest mockolo
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: swifixture
+      - name: Create a package depending on swifixture and mockolo
+        run: |
+          MOCKOLO_VERSION=$(git ls-remote --tags --refs https://github.com/uber/mockolo.git \
+            | awk -F/ '{print $3}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+          echo "mockolo $MOCKOLO_VERSION"
+          mkdir -p BuildTools/Sources/BuildTools
+          touch BuildTools/Sources/BuildTools/BuildTools.swift
+          cat > BuildTools/Package.swift <<EOF
+          // swift-tools-version: 6.0
+          import PackageDescription
+
+          let package = Package(
+              name: "BuildTools",
+              platforms: [.macOS(.v13)],
+              dependencies: [
+                  .package(path: "../swifixture"),
+                  .package(url: "https://github.com/uber/mockolo.git", exact: "$MOCKOLO_VERSION"),
+              ],
+              targets: [.target(name: "BuildTools")]
+          )
+          EOF
+      - name: Resolve dependencies
+        working-directory: BuildTools
+        run: |
+          swift package resolve
+          cat Package.resolved
